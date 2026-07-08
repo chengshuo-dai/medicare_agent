@@ -27,7 +27,9 @@ class Settings(BaseSettings):
     app_version: str = "0.1.0"
     debug: bool = False
     environment: Literal["development", "staging", "production"] = "development"
-    secret_key: SecretStr  # No default — must be provided via env
+    secret_key: SecretStr = SecretStr(
+        "dev-secret-key-change-in-production"
+    )  # Required in production — Railway/Render must set SECRET_KEY env var
 
     # Database
     database_url: PostgresDsn = PostgresDsn("postgresql+asyncpg://postgres:postgres@localhost:5432/medicareai")

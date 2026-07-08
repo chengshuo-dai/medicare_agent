@@ -72,3 +72,10 @@ npm-debug.log*
 frontend/dist/
 frontend/build/
 uploads/
+
+# Dev tool session files
+.superpowers/
+.sisyphus/
+
+# Generated evaluation output
+scripts/eval_results.json

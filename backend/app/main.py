@@ -46,12 +46,11 @@ async def _ensure_default_admin() -> None:
         if result.scalar_one_or_none():
             return  # Admin already exists
 
-        # Default admin credentials — MUST be changed on first login
         admin_email = settings.default_admin_email
         admin_password = settings.default_admin_password
 
         if not admin_password:
-            return  # No default password configured — skip auto-creation
+            return
 
         admin = User(
             email=admin_email,
@@ -65,10 +64,51 @@ async def _ensure_default_admin() -> None:
         await db.commit()
 
 
+async def _ensure_default_llm_provider() -> None:
+    """Seed LLM provider from DEEPSEEK_API_KEY env var on first deploy."""
+    import os
+    from app.core.encryption import encrypt_value
+    from app.models.config import LLMProviderConfig
+
+    deepseek_key = os.getenv("DEEPSEEK_API_KEY", "").strip()
+    if not deepseek_key:
+        return
+
+    # Need API_KEY_MASTER_KEY for encryption — skip if not set
+    master_key = os.getenv("API_KEY_MASTER_KEY", "").strip()
+    if not master_key:
+        return
+
+    async with AsyncSessionLocal() as db:
+        result = await db.execute(
+            select(LLMProviderConfig).where(LLMProviderConfig.is_active == True).limit(1)
+        )
+        if result.scalar_one_or_none():
+            return
+
+        try:
+            config = LLMProviderConfig(
+                provider="deepseek",
+                name="DeepSeek (auto-configured)",
+                base_url=os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1"),
+                api_key_encrypted=encrypt_value(deepseek_key),
+                default_model="deepseek-chat",
+                model_type="diagnosis",
+                is_active=True,
+                is_default=True,
+                priority=0,
+            )
+            db.add(config)
+            await db.commit()
+        except Exception:
+            pass  # Encryption failed — admin can configure via UI later
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan handler."""
     await _ensure_default_admin()
+    await _ensure_default_llm_provider()
     yield
 
 

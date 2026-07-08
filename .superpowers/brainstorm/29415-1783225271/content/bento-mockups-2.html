@@ -1,0 +1,136 @@
+<h2>💬 Chat Page — Full-Width + Slide-up History</h2>
+<p class="subtitle">无边栏设计，历史记录从底部滑出</p>
+
+<div class="mockup">
+  <div class="mockup-header">Chat View (Patient)</div>
+  <div class="mockup-body">
+    <div style="background:#F8F5F0;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;">
+      <!-- Header -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:white;border-bottom:1px solid #D9D6CE;">
+        <div style="font-weight:700;color:#2C3E2D;font-size:13px;">💬 MediCareAI Assistant</div>
+        <div style="display:flex;gap:8px;">
+          <div style="font-size:10px;color:#6B7D6B;padding:4px 10px;border-radius:14px;background:#F0F3EE;">🕐 History</div>
+          <div style="font-size:10px;color:white;padding:4px 10px;border-radius:14px;background:#7D9B76;">+ New Chat</div>
+        </div>
+      </div>
+      <!-- Messages -->
+      <div style="padding:16px;">
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:#7D9B76;flex-shrink:0;"></div>
+          <div style="background:white;border-radius:4px 14px 14px 14px;padding:10px 14px;font-size:11px;color:#2C3E2D;max-width:75%;">Hello! I'm your AI medical assistant. Please describe your symptoms and I'll help analyze them.</div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-direction:row-reverse;">
+          <div style="background:#7D9B76;color:white;border-radius:14px 4px 14px 14px;padding:10px 14px;font-size:11px;max-width:70%;">I've been having headaches for 3 days, and sometimes feel dizzy.</div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:#7D9B76;flex-shrink:0;"></div>
+          <div>
+            <div style="background:white;border-radius:4px 14px 14px 14px;padding:10px 14px;font-size:11px;color:#2C3E2D;max-width:75%;">I understand. Let me ask a few questions to help narrow down the cause.</div>
+            <div style="display:flex;gap:6px;margin-top:6px;">
+              <div style="background:#F0F3EE;border-radius:14px;padding:6px 12px;font-size:9px;color:#2C3E2D;border:1px solid #D9D6CE;">🔍 Analyzing symptoms</div>
+              <div style="background:#EDE8F6;border-radius:14px;padding:6px 12px;font-size:9px;color:#4A5568;border:1px solid #D0D8E4;">🩺 3 questions generated</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Input -->
+      <div style="padding:8px 16px 12px;background:white;border-top:1px solid #D9D6CE;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div style="flex:1;border:1px solid #D9D6CE;border-radius:20px;padding:8px 14px;font-size:10px;color:#6B7D6B;">Describe your symptoms...</div>
+          <div style="width:32px;height:32px;border-radius:50%;background:#7D9B76;color:white;display:flex;align-items:center;justify-content:center;font-size:14px;">↑</div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px;">
+          <div style="font-size:9px;padding:4px 10px;border-radius:14px;background:#F0F3EE;color:#2C3E2D;">📎 Upload Report</div>
+          <div style="font-size:9px;padding:4px 10px;border-radius:14px;background:#F0F3EE;color:#2C3E2D;">❓ Common: Headache</div>
+        </div>
+      </div>
+      <!-- Bottom Nav -->
+      <div style="display:flex;justify-content:space-around;padding:8px 0;background:white;border-top:1px solid #D9D6CE;">
+        <div style="text-align:center;color:#6B7D6B;font-size:9px;">🏠 Home</div>
+        <div style="text-align:center;color:#7D9B76;font-weight:600;font-size:9px;">💬 Chat</div>
+        <div style="text-align:center;color:#6B7D6B;font-size:9px;">📋 Records</div>
+        <div style="text-align:center;color:#6B7D6B;font-size:9px;">👤 Profile</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mockup" style="margin-top:24px;">
+  <div class="mockup-header">Slide-up History Panel (when tapping 🕐 History)</div>
+  <div class="mockup-body">
+    <div style="background:#F8F5F0;border-radius:8px;padding:16px;font-family:'Plus Jakarta Sans',sans-serif;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+        <div style="font-size:12px;font-weight:600;color:#2C3E2D;">Chat History</div>
+        <div style="font-size:10px;color:#6B7D6B;">✕</div>
+      </div>
+      <div style="background:white;border-radius:12px;padding:10px;margin-bottom:6px;border:1px solid #D9D6CE;">
+        <div style="font-size:11px;color:#2C3E2D;">Headache & dizziness</div>
+        <div style="font-size:8px;color:#6B7D6B;">Today · 3 messages</div>
+      </div>
+      <div style="background:white;border-radius:12px;padding:10px;margin-bottom:6px;border:1px solid #D9D6CE;">
+        <div style="font-size:11px;color:#2C3E2D;">Blood test results review</div>
+        <div style="font-size:8px;color:#6B7D6B;">Yesterday · 8 messages</div>
+      </div>
+      <div style="background:white;border-radius:12px;padding:10px;margin-bottom:6px;border:1px solid #D9D6CE;">
+        <div style="font-size:11px;color:#2C3E2D;">Annual checkup consultation</div>
+        <div style="font-size:8px;color:#6B7D6B;">Jun 28 · 12 messages</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mockup" style="margin-top:24px;">
+  <div class="mockup-header">🏥 Doctor Dashboard — Bento Grid</div>
+  <div class="mockup-body">
+    <div style="background:#EDF0F4;border-radius:8px;padding:16px;font-family:'Plus Jakarta Sans',sans-serif;">
+      <!-- Top tabs -->
+      <div style="display:flex;gap:0;margin-bottom:16px;background:white;border-radius:12px;padding:4px;">
+        <div style="flex:1;text-align:center;padding:8px;font-size:10px;font-weight:600;background:#4A5568;color:white;border-radius:10px;">Dashboard</div>
+        <div style="flex:1;text-align:center;padding:8px;font-size:10px;color:#718096;">Cases</div>
+        <div style="flex:1;text-align:center;padding:8px;font-size:10px;color:#718096;">Messages</div>
+        <div style="flex:1;text-align:center;padding:8px;font-size:10px;color:#718096;">Profile</div>
+      </div>
+      <!-- Bento stats -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="background:white;border-radius:12px;padding:12px;">
+          <div style="font-size:8px;color:#718096;">PENDING REVIEWS</div>
+          <div style="font-size:22px;font-weight:700;color:#2D3748;">12</div>
+          <div style="font-size:9px;color:#C05621;">3 urgent</div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:12px;">
+          <div style="font-size:8px;color:#718096;">NEW MESSAGES</div>
+          <div style="font-size:22px;font-weight:700;color:#2D3748;">5</div>
+          <div style="font-size:9px;color:#3B82F6;">2 unread</div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:12px;">
+          <div style="font-size:8px;color:#718096;">TOTAL PATIENTS</div>
+          <div style="font-size:22px;font-weight:700;color:#2D3748;">247</div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:12px;">
+          <div style="font-size:8px;color:#718096;">FOLLOW-UP DUE</div>
+          <div style="font-size:22px;font-weight:700;color:#2D3748;">8</div>
+          <div style="font-size:9px;color:#C53030;">2 overdue</div>
+        </div>
+      </div>
+      <!-- Recent patients -->
+      <div style="background:white;border-radius:12px;padding:12px;margin-top:8px;">
+        <div style="font-size:11px;font-weight:600;color:#2D3748;margin-bottom:8px;">Recent Patients</div>
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #CBD5E0;">
+          <div style="width:28px;height:28px;border-radius:50%;background:#4A5568;color:white;font-size:10px;display:flex;align-items:center;justify-content:center;">ZS</div>
+          <div style="flex:1;"><div style="font-size:10px;font-weight:600;color:#2D3748;">Zhang Wei</div><div style="font-size:8px;color:#718096;">Chest pain · Pending review</div></div>
+          <div style="font-size:9px;color:#C05621;">Urgent</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #CBD5E0;">
+          <div style="width:28px;height:28px;border-radius:50%;background:#7B8DAA;color:white;font-size:10px;display:flex;align-items:center;justify-content:center;">LL</div>
+          <div style="flex:1;"><div style="font-size:10px;font-weight:600;color:#2D3748;">Li Li</div><div style="font-size:8px;color:#718096;">Diabetes follow-up · Stable</div></div>
+          <div style="font-size:9px;color:#2F855A;">Stable</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 0;">
+          <div style="width:28px;height:28px;border-radius:50%;background:#A0AEC0;color:white;font-size:10px;display:flex;align-items:center;justify-content:center;">WM</div>
+          <div style="flex:1;"><div style="font-size:10px;font-weight:600;color:#2D3748;">Wang Ming</div><div style="font-size:8px;color:#718096;">Hypertension · New case</div></div>
+          <div style="font-size:9px;color:#3B82F6;">New</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

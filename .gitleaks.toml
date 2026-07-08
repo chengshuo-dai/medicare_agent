@@ -1,0 +1,17 @@
+# Gitleaks configuration — allow test/CI credentials, catch real leaks
+[allowlist]
+  description = "Allowlist for test credentials and example values"
+
+  [[allowlist.rules]]
+    id = "generic-api-key"
+    description = "Allow CI test secret keys"
+    regex = '''(?i)(secret_key|api_key_master_key|default_admin_password)\s*[:=]\s*['"](ci-test|medicareai-dev|test-)[^'"]*['"]'''
+
+  [[allowlist.paths]]
+    description = "Ignore test fixtures and CI configs"
+    paths = [
+      '''backend/tests/''',
+      '''.github/workflows/''',
+      '''.env.example''',
+      '''docker-compose.yml''',
+    ]

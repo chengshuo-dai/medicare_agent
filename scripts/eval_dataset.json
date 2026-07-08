@@ -1,0 +1,186 @@
+{
+  "description": "MediCareAI diagnosis quality evaluation dataset. 30 medical questions across 3 categories: simple health FAQ, symptom inquiry, and complex differential diagnosis.",
+  "version": "1.0",
+  "test_cases": [
+    {
+      "id": "S01",
+      "category": "simple",
+      "question": "What is a normal body temperature range for adults?",
+      "expected_aspects": ["normal range 36-37.5°C or 97-99°F", "varies by measurement site", "fever threshold"]
+    },
+    {
+      "id": "S02",
+      "category": "simple",
+      "question": "How much water should I drink per day?",
+      "expected_aspects": ["general guideline 2-3 liters", "varies by activity and climate", "individual factors"]
+    },
+    {
+      "id": "S03",
+      "category": "simple",
+      "question": "What causes the common cold?",
+      "expected_aspects": ["viral infection", "rhinovirus most common", "transmission route", "self-limiting"]
+    },
+    {
+      "id": "S04",
+      "category": "simple",
+      "question": "How many hours of sleep do adults need?",
+      "expected_aspects": ["7-9 hours recommended", "varies by individual", "sleep quality matters"]
+    },
+    {
+      "id": "S05",
+      "category": "simple",
+      "question": "What is blood pressure and what numbers are normal?",
+      "expected_aspects": ["systolic/diastolic explanation", "120/80 mmHg normal", "hypertension threshold"]
+    },
+    {
+      "id": "S06",
+      "category": "simple",
+      "question": "Is it safe to exercise with a mild cold?",
+      "expected_aspects": ["neck check rule", "moderate exercise ok", "rest if fever present", "listen to body"]
+    },
+    {
+      "id": "S07",
+      "category": "simple",
+      "question": "What are the symptoms of seasonal allergies?",
+      "expected_aspects": ["sneezing runny nose", "itchy eyes", "seasonal pattern", "distinguish from cold"]
+    },
+    {
+      "id": "S08",
+      "category": "simple",
+      "question": "How does paracetamol (acetaminophen) work?",
+      "expected_aspects": ["pain relief mechanism", "fever reduction", "dosage safety", "liver metabolism warning"]
+    },
+    {
+      "id": "S09",
+      "category": "simple",
+      "question": "What causes dizziness when standing up quickly?",
+      "expected_aspects": ["orthostatic hypotension", "blood pressure drop", "usually benign", "when to see doctor"]
+    },
+    {
+      "id": "S10",
+      "category": "simple",
+      "question": "What are the benefits of vitamin D?",
+      "expected_aspects": ["bone health", "immune function", "sunlight source", "deficiency risks"]
+    },
+    {
+      "id": "M01",
+      "category": "symptom",
+      "question": "I have had a headache and low-grade fever for 3 days. What could this be and when should I see a doctor?",
+      "expected_aspects": ["viral infection most likely", "warning signs: stiff neck, severe pain, confusion", "hydration and rest", "when to seek care"]
+    },
+    {
+      "id": "M02",
+      "category": "symptom",
+      "question": "I've been experiencing heartburn after meals, especially at night. What lifestyle changes can help?",
+      "expected_aspects": ["GERD likely", "dietary triggers", "sleep position elevation", "not eating before bed", "when to consider medication"]
+    },
+    {
+      "id": "M03",
+      "category": "symptom",
+      "question": "My 5-year-old has a cough that gets worse at night. No fever. What should I do?",
+      "expected_aspects": ["possible asthma or allergy", "humidifier suggestion", "when to see pediatrician", "warning signs: breathing difficulty"]
+    },
+    {
+      "id": "M04",
+      "category": "symptom",
+      "question": "I have lower back pain that started after lifting something heavy. What's the likely cause and treatment?",
+      "expected_aspects": ["muscle strain most likely", "rest vs movement balance", "heat/ice therapy", "red flags: numbness, bowel/bladder issues"]
+    },
+    {
+      "id": "M05",
+      "category": "symptom",
+      "question": "I've had diarrhea for 2 days with mild abdominal cramping. No blood. What should I do?",
+      "expected_aspects": ["viral gastroenteritis likely", "hydration critical", "BRAT diet", "when to seek care: blood, severe pain, dehydration signs"]
+    },
+    {
+      "id": "M06",
+      "category": "symptom",
+      "question": "I feel a lump in my neck that's been there for 2 weeks. It's not painful. Should I be concerned?",
+      "expected_aspects": ["lymph node likely", "recent infection cause", "persistent >2 weeks warrants evaluation", "warning signs: hard, fixed, growing"]
+    },
+    {
+      "id": "M07",
+      "category": "symptom",
+      "question": "I've been feeling very tired for the past month, no matter how much I sleep. What could cause this?",
+      "expected_aspects": ["multiple causes: anemia, thyroid, sleep apnea, depression", "lifestyle factors", "recommend basic blood work", "sleep hygiene"]
+    },
+    {
+      "id": "M08",
+      "category": "symptom",
+      "question": "I get migraine headaches about twice a month. What are my treatment options?",
+      "expected_aspects": ["acute treatment: triptans, NSAIDs", "prevention if frequent", "trigger identification", "when to see neurologist"]
+    },
+    {
+      "id": "M09",
+      "category": "symptom",
+      "question": "I have a rash on my arm that appeared suddenly. It's red, slightly raised, and itchy. What could it be?",
+      "expected_aspects": ["contact dermatitis or allergy most likely", "urticaria possibility", "try antihistamine", "infection signs to watch for"]
+    },
+    {
+      "id": "M10",
+      "category": "symptom",
+      "question": "I've been having pain in my right knee when going up stairs. I'm 55 and overweight. What's likely causing this?",
+      "expected_aspects": ["osteoarthritis likely", "weight management", "low-impact exercise", "when to consider imaging or specialist"]
+    },
+    {
+      "id": "C01",
+      "category": "complex",
+      "question": "A 45-year-old woman presents with fatigue, joint pain in hands and wrists, morning stiffness lasting over an hour, and a low-grade fever for 6 weeks. What is the differential diagnosis?",
+      "expected_aspects": ["rheumatoid arthritis primary", "SLE consideration", "seronegative spondyloarthropathy", "recommend RF, anti-CCP, ANA, ESR/CRP", "early referral to rheumatology"]
+    },
+    {
+      "id": "C02",
+      "category": "complex",
+      "question": "A 60-year-old man with hypertension and diabetes has been experiencing chest pain on exertion that goes away with rest. The pain started 2 weeks ago and is getting more frequent. What is the likely diagnosis and immediate management?",
+      "expected_aspects": ["stable angina progressing to unstable", "urgent cardiac evaluation needed", "ECG and troponin", "risk factor management", "antiplatelet and statin therapy"]
+    },
+    {
+      "id": "C03",
+      "category": "complex",
+      "question": "A 32-year-old woman reports episodes of palpitations, sweating, and a feeling of impending doom that come on suddenly and last about 20 minutes. These occur 2-3 times per week. What is the differential and initial workup?",
+      "expected_aspects": ["panic disorder vs panic attacks", "hyperthyroidism rule-out", "cardiac arrhythmia consideration", "pheochromocytoma rare but considered", "TSH, ECG, possibly Holter"]
+    },
+    {
+      "id": "C04",
+      "category": "complex",
+      "question": "A 70-year-old man has been gradually losing weight over 6 months, has early satiety, and his wife noticed his skin looks yellow. He has a 40-pack-year smoking history. What is the most concerning diagnosis and what workup is needed?",
+      "expected_aspects": ["pancreatic cancer top concern", "jaundice suggests biliary obstruction", "CT abdomen with contrast", "CA 19-9 and LFTs", "urgent gastroenterology referral"]
+    },
+    {
+      "id": "C05",
+      "category": "complex",
+      "question": "A 28-year-old woman has had 3 months of diarrhea alternating with constipation, abdominal bloating, and mucus in stool. No blood, no weight loss. What is the most likely diagnosis and how is it managed?",
+      "expected_aspects": ["IBS most likely", "Rome IV criteria", "no alarm features reassuring", "dietary modification: low FODMAP", "stress management", "when to scope"]
+    },
+    {
+      "id": "C06",
+      "category": "complex",
+      "question": "A 55-year-old woman with no prior psychiatric history suddenly develops confusion, visual hallucinations, and memory problems over 2 weeks. She has a 30-pack-year smoking history. What is in the differential?",
+      "expected_aspects": ["paraneoplastic limbic encephalitis", "lung cancer with anti-Hu antibodies", "CJD rare", "autoimmune encephalitis", "urgent MRI brain, CT chest, EEG, LP"]
+    },
+    {
+      "id": "C07",
+      "category": "complex",
+      "question": "A 40-year-old man returns from a 2-week trip to sub-Saharan Africa with fever, chills, headache, and muscle pain that started 5 days after return. He did not take malaria prophylaxis. What is the differential and immediate management?",
+      "expected_aspects": ["malaria top concern — P. falciparum rule-out", "typhoid, dengue also possible", "urgent blood smear and rapid test", "consider admission", "travel history critical"]
+    },
+    {
+      "id": "C08",
+      "category": "complex",
+      "question": "A 65-year-old woman has had progressive shortness of breath over 2 years, a dry cough, and her fingers appear clubbed. She has never smoked but worked in a textile factory for 30 years. What is the differential diagnosis?",
+      "expected_aspects": ["idiopathic pulmonary fibrosis", "occupational lung disease", "CT chest high-resolution", "pulmonary function tests", "pulmonology referral"]
+    },
+    {
+      "id": "C09",
+      "category": "complex",
+      "question": "A 50-year-old man with known cirrhosis from hepatitis C presents with increasing abdominal girth, shifting dullness on exam, and spider angiomas on his chest. What complication has developed and what is the management?",
+      "expected_aspects": ["ascites from portal hypertension", "diagnostic paracentesis", "SAAG calculation", "sodium restriction and diuretics", "SBP prophylaxis if indicated", "transplant evaluation"]
+    },
+    {
+      "id": "C10",
+      "category": "complex",
+      "question": "A 35-year-old woman has had 2 unexplained miscarriages, a DVT in her leg last year, and now presents with a rash on her cheeks that gets worse in the sun. What is the likely unifying diagnosis and what tests confirm it?",
+      "expected_aspects": ["systemic lupus erythematosus", "antiphospholipid syndrome secondary", "ANA, anti-dsDNA, anti-Smith", "lupus anticoagulant, anti-cardiolipin", "rheumatology and high-risk OB referral"]
+    }
+  ]
+}

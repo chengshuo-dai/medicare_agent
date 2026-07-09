@@ -879,7 +879,7 @@ export default function ChatPage() {
   }, {});
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: '#F6F4EF' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', bgcolor: '#F6F4EF', pb: '56px' }}>
       <CssBaseline />
 
       {/* Top Bar */}

@@ -4,7 +4,7 @@ import BottomNav from './BottomNav';
 
 export default function PatientLayout() {
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#F8F5F0', pb: 8 }}>
+    <Box sx={{ height: '100dvh', display: 'flex', flexDirection: 'column', bgcolor: '#F8F5F0', overflow: 'hidden' }}>
       <Outlet />
       <BottomNav />
     </Box>

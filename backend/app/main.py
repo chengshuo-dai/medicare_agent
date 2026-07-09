@@ -66,24 +66,41 @@ async def _ensure_default_admin() -> None:
 
 async def _ensure_default_llm_provider() -> None:
     """Seed LLM provider from DEEPSEEK_API_KEY env var on first deploy."""
+    import logging
     import os
     from app.core.encryption import encrypt_value
     from app.models.config import LLMProviderConfig
 
+    _log = logging.getLogger(__name__)
+
     deepseek_key = os.getenv("DEEPSEEK_API_KEY", "").strip()
     if not deepseek_key:
+        _log.warning("DEEPSEEK_API_KEY env var not set — LLM calls will fail")
         return
 
     # Need API_KEY_MASTER_KEY for encryption — skip if not set
     master_key = os.getenv("API_KEY_MASTER_KEY", "").strip()
     if not master_key:
+        _log.warning("API_KEY_MASTER_KEY env var not set — cannot encrypt API key")
         return
 
     async with AsyncSessionLocal() as db:
         result = await db.execute(
             select(LLMProviderConfig).where(LLMProviderConfig.is_active == True).limit(1)
         )
-        if result.scalar_one_or_none():
+        existing = result.scalar_one_or_none()
+        if existing:
+            # Check if existing config has a valid encrypted key
+            if not existing.api_key_encrypted:
+                _log.warning("Existing LLM provider has no encrypted key — re-encrypting")
+                try:
+                    existing.api_key_encrypted = encrypt_value(deepseek_key)
+                    await db.commit()
+                    _log.info("LLM provider key updated successfully")
+                except Exception as exc:
+                    _log.error(f"Failed to update LLM provider key: {exc}")
+            else:
+                _log.info("LLM provider already configured")
             return
 
         try:
@@ -100,8 +117,9 @@ async def _ensure_default_llm_provider() -> None:
             )
             db.add(config)
             await db.commit()
-        except Exception:
-            pass  # Encryption failed — admin can configure via UI later
+            _log.info("LLM provider auto-configured from DEEPSEEK_API_KEY")
+        except Exception as exc:
+            _log.error(f"Failed to auto-configure LLM provider: {exc}")
 
 
 @asynccontextmanager

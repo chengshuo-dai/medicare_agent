@@ -84,24 +84,34 @@ async def _ensure_default_llm_provider() -> None:
         _log.warning("API_KEY_MASTER_KEY env var not set — cannot encrypt API key")
         return
 
+    from app.core.encryption import decrypt_value
+
     async with AsyncSessionLocal() as db:
         result = await db.execute(
             select(LLMProviderConfig).where(LLMProviderConfig.is_active == True).limit(1)
         )
         existing = result.scalar_one_or_none()
         if existing:
-            # Check if existing config has a valid encrypted key
-            if not existing.api_key_encrypted:
-                _log.warning("Existing LLM provider has no encrypted key — re-encrypting")
+            # Verify the encrypted key can actually be decrypted
+            try:
+                decrypted = decrypt_value(existing.api_key_encrypted)
+                if decrypted:
+                    _log.info("LLM provider already configured (key verified)")
+                else:
+                    _log.warning("Existing key decrypted to empty — re-encrypting")
+                    existing.api_key_encrypted = encrypt_value(deepseek_key)
+                    await db.commit()
+                    _log.info("LLM provider key re-encrypted successfully")
+                return
+            except Exception as exc:
+                _log.warning(f"Existing key failed decryption ({exc}) — re-encrypting")
                 try:
                     existing.api_key_encrypted = encrypt_value(deepseek_key)
                     await db.commit()
-                    _log.info("LLM provider key updated successfully")
-                except Exception as exc:
-                    _log.error(f"Failed to update LLM provider key: {exc}")
-            else:
-                _log.info("LLM provider already configured")
-            return
+                    _log.info("LLM provider key re-encrypted successfully")
+                except Exception as exc2:
+                    _log.error(f"Failed to re-encrypt LLM provider key: {exc2}")
+                return
 
         try:
             config = LLMProviderConfig(

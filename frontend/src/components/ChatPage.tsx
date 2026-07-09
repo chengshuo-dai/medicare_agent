@@ -415,18 +415,22 @@ export default function ChatPage() {
               }
               case 'error': {
                 const errorMsg = event.data?.message as string || event.data?.error as string || 'Service error';
+                const isQuotaError = errorMsg.includes('额度已用完');
                 addStep({
                   type: 'thinking',
                   status: 'error',
-                  title: `Error: ${errorMsg}`,
+                  title: isQuotaError ? errorMsg : `Error: ${errorMsg}`,
                 });
                 setMessages((prev) => {
                   const idx = prev.findIndex((m) => m.id === agentMsgId);
+                  const displayMsg = isQuotaError
+                    ? `⚠️ ${errorMsg}\n\n请点击上方 **登录** 或 **注册** 按钮，即可无限次使用 AI 问诊服务。`
+                    : `❌ Error: ${errorMsg}`;
                   if (idx === -1) {
-                    return [...prev, { id: agentMsgId, role: 'agent', content: `❌ Error: ${errorMsg}`, timestamp: new Date(), workflowSteps: [...workflowSteps] }];
+                    return [...prev, { id: agentMsgId, role: 'agent', content: displayMsg, timestamp: new Date(), workflowSteps: [...workflowSteps] }];
                   }
                   const next = prev.slice();
-                  next[idx] = { ...next[idx], content: `❌ Error: ${errorMsg}`, isStreaming: false, workflowSteps: [...workflowSteps] };
+                  next[idx] = { ...next[idx], content: displayMsg, isStreaming: false, workflowSteps: [...workflowSteps] };
                   return next;
                 });
                 break;
@@ -435,6 +439,11 @@ export default function ChatPage() {
                 const sid = event.data?.session_id as string;
                 if (sid) backendSessionIdRef.current = sid;
                 const status = event.data?.status as string;
+                if (status === 'quota_exceeded') {
+                  // Guest free quota used up — don't add more steps
+                  setIsStreaming(false);
+                  break;
+                }
                 if (status === 'waiting_for_answer') {
                   if (sid) {
                     if (!pendingSessionRef.current) {
@@ -961,7 +970,7 @@ export default function ChatPage() {
         ) : (
           <ChatInput
             onSend={handleSend}
-            disabled={isStreaming}
+            disabled={isStreaming || (guestStatus ? !guestStatus.can_interact : false)}
             quickReplies={chatMode === 'idle' && messages.length <= 2 ? QUICK_REPLIES : undefined}
             onQuickReply={handleQuickReply}
             onFileUpload={handleFileUpload}

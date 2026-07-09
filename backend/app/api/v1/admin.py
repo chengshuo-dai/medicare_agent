@@ -79,9 +79,9 @@ DEFAULT_SETTINGS: list[SystemSettingCreate] = [
         value_type="boolean",
     ),
     SystemSettingCreate(
-        key="auth.guest_max_messages",
-        value="10",
-        description="访客模式允许的最大对话轮数",
+        key="guest.max_messages",
+        value="1",
+        description="访客免费问诊次数上限",
         category="auth",
         value_type="number",
     ),

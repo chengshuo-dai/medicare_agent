@@ -110,7 +110,7 @@ class DynamicConfigService:
 
     @classmethod
     async def guest_max_messages(cls, db: AsyncSession) -> int:
-        return await cls.get_int(db, "guest.max_messages", default=999)
+        return await cls.get_int(db, "guest.max_messages", default=1)
 
     @classmethod
     async def cors_origins(cls, db: AsyncSession) -> list[str]:

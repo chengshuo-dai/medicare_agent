@@ -14,21 +14,25 @@ interface Props {
 export default function GuestBanner({ status, onRegister, onLogin }: Props) {
   if (!status) return null;
 
-  const progress = ((status.max_interactions - status.remaining) / status.max_interactions) * 100;
-  const isNearLimit = status.remaining <= 1;
+  const progress = status.max_interactions > 0
+    ? ((status.max_interactions - status.remaining) / status.max_interactions) * 100
+    : 100;
+  const isExhausted = status.remaining <= 0 && status.interaction_count > 0;
 
   return (
-    <Box sx={{ bgcolor: isNearLimit ? '#FEF9F2' : '#F0F3EE', borderBottom: '1px solid #D9D6CE', px: 2, py: 1.5 }}>
+    <Box sx={{ bgcolor: isExhausted ? '#FFF3E0' : '#F0F3EE', borderBottom: '1px solid #D9D6CE', px: 2, py: 1.5 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
         <Box sx={flexRowGap15}>
           <Chip label="Guest Mode" size="small"
-            sx={{ bgcolor: isNearLimit ? '#F57C00' : '#D9D6CE', color: '#2C3E2D', fontWeight: 500, fontSize: 12 }} />
-          <Typography variant="body2" color={isNearLimit ? 'error' : 'text.secondary'}>
-            Used {status.interaction_count} / {status.max_interactions} rounds
+            sx={{ bgcolor: isExhausted ? '#E65100' : '#D9D6CE', color: isExhausted ? '#fff' : '#2C3E2D', fontWeight: 500, fontSize: 12 }} />
+          <Typography variant="body2" color={isExhausted ? 'error' : 'text.secondary'}>
+            {isExhausted
+              ? 'Free consultation used — register to continue'
+              : `${status.remaining} free consultation${status.remaining !== 1 ? 's' : ''} remaining`}
           </Typography>
-          {isNearLimit && (
+          {isExhausted && (
             <Typography variant="caption" color="error" sx={{ fontWeight: 500 }}>
-              ⚠️ Approaching limit, please register to continue
+              ⚠️ Quota exhausted, please register to continue
             </Typography>
           )}
         </Box>
@@ -46,7 +50,7 @@ export default function GuestBanner({ status, onRegister, onLogin }: Props) {
       </Box>
 
       <LinearProgress variant="determinate" value={progress}
-        sx={{ mt: 1, height: 4, borderRadius: 2, bgcolor: '#D9D6CE', '& .MuiLinearProgress-bar': { bgcolor: isNearLimit ? '#D32F2F' : '#7D9B76', borderRadius: 2 } }} />
+        sx={{ mt: 1, height: 4, borderRadius: 2, bgcolor: '#D9D6CE', '& .MuiLinearProgress-bar': { bgcolor: isExhausted ? '#D32F2F' : '#7D9B76', borderRadius: 2 } }} />
     </Box>
   );
 }

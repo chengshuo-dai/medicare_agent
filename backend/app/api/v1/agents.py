@@ -799,12 +799,14 @@ async def route_stream(
     if not has_bearer and ctx.user is None and not ctx.is_guest:
         from app.models.user import GuestSession
         from app.core.security import create_guest_token
+        from app.services.config import DynamicConfigService
         import uuid as _uuid
         session_token = _uuid.uuid4().hex
+        max_msgs = await DynamicConfigService.guest_max_messages(db)
         guest = GuestSession(
             session_token=session_token,
             fingerprint="sse-auto",
-            max_messages=999,
+            max_messages=max_msgs,
             expires_at=datetime.now(timezone.utc) + timedelta(hours=24),
         )
         db.add(guest)
@@ -828,6 +830,32 @@ async def route_stream(
                 # Emit new guest token if one was auto-created
                 if ctx.is_guest and ctx.guest_id:
                     yield f"event: guest_token\ndata: {json.dumps({'guest_token': getattr(ctx, '_new_token', None) or ''})}\n\n"
+
+                # Check guest quota — block if limit reached
+                if ctx.is_guest and ctx.guest_id:
+                    from app.models.user import GuestSession as GS
+                    import uuid as _uuid2
+                    try:
+                        guest_sid = _uuid2.UUID(ctx.guest_id)
+                        guest_row = await db.get(GS, guest_sid)
+                        if guest_row and guest_row.message_count >= guest_row.max_messages:
+                            yield f"event: error\ndata: {json.dumps({'message': '您的一次免费问诊额度已用完。请注册/登录后继续使用。'})}\n\n"
+                            yield f"event: complete\ndata: {json.dumps({'status': 'quota_exceeded'})}\n\n"
+                            return
+                    except (ValueError, Exception):
+                        pass  # Invalid UUID or DB error — proceed cautiously
+
+                # Helper: increment guest message_count after a completed interaction
+                async def _inc_guest_count():
+                    if ctx.is_guest and ctx.guest_id:
+                        try:
+                            from app.models.user import GuestSession as _GS
+                            _g = await db.get(_GS, uuid.UUID(ctx.guest_id))
+                            if _g:
+                                _g.message_count += 1
+                                await db.commit()
+                        except Exception:
+                            pass
 
                 master = AgentOrchestrator(provider=provider)
                 actual_patient_id = patient_id or (str(ctx.user.id) if ctx.user else None)
@@ -1110,6 +1138,7 @@ async def route_stream(
                                     content = workflow_result.content if isinstance(workflow_result.content, str) else ''
                                     for chunk in _chunk_text(content, chunk_size=80):
                                         yield f"event: text\ndata: {json.dumps({'text': chunk})}\n\n"
+                                await _inc_guest_count()
                                 yield f"event: complete\ndata: {json.dumps({'message': '✅ 响应完成', 'session_id': session_id})}\n\n"
                                 return
                             except Exception:
@@ -1172,6 +1201,7 @@ async def route_stream(
                             yield f"event: error\ndata: {json.dumps({'error': str(e)})}\n\n"
                             return
 
+                await _inc_guest_count()
                 yield f"event: complete\ndata: {json.dumps({'message': '✅ 响应完成'})}\n\n"
 
         except BaseException as e:
@@ -1226,6 +1256,29 @@ async def route_stream_continue(
 
     async def event_generator():
         try:
+                # Check guest quota
+                if ctx.is_guest and ctx.guest_id:
+                    try:
+                        from app.models.user import GuestSession as _GS2
+                        _g = await db.get(_GS2, uuid.UUID(ctx.guest_id))
+                        if _g and _g.message_count >= _g.max_messages:
+                            yield f"event: error\ndata: {json.dumps({'message': '您的一次免费问诊额度已用完。请注册/登录后继续使用。'})}\n\n"
+                            yield f"event: complete\ndata: {json.dumps({'status': 'quota_exceeded'})}\n\n"
+                            return
+                    except (ValueError, Exception):
+                        pass
+
+                async def _inc_guest_count():
+                    if ctx.is_guest and ctx.guest_id:
+                        try:
+                            from app.models.user import GuestSession as _GS3
+                            _g2 = await db.get(_GS3, uuid.UUID(ctx.guest_id))
+                            if _g2:
+                                _g2.message_count += 1
+                                await db.commit()
+                        except Exception:
+                            pass
+
                 # Look up the session
                 stmt = select(AgentSession).where(AgentSession.id == uuid.UUID(session_id))
                 result = await db.execute(stmt)
@@ -1347,6 +1400,7 @@ async def route_stream_continue(
                     _err_msg = f"诊断分析失败: {e}"
                     yield f"event: error\ndata: {json.dumps({'error': _err_msg})}\n\n"
 
+                await _inc_guest_count()
                 yield f"event: complete\ndata: {json.dumps({'message': '✅ 响应完成', 'session_id': session_id})}\n\n"
 
         except BaseException as e:
@@ -1430,6 +1484,29 @@ async def chat_session(
 
     async def event_generator():
         try:
+            # Check guest quota
+            if ctx.is_guest and ctx.guest_id:
+                try:
+                    from app.models.user import GuestSession as _GS4
+                    _g = await db.get(_GS4, uuid.UUID(ctx.guest_id))
+                    if _g and _g.message_count >= _g.max_messages:
+                        yield f"event: error\ndata: {json.dumps({'message': '您的一次免费问诊额度已用完。请注册/登录后继续使用。'})}\n\n"
+                        yield f"event: complete\ndata: {json.dumps({'status': 'quota_exceeded'})}\n\n"
+                        return
+                except (ValueError, Exception):
+                    pass
+
+            async def _inc_guest_count():
+                if ctx.is_guest and ctx.guest_id:
+                    try:
+                        from app.models.user import GuestSession as _GS5
+                        _g2 = await db.get(_GS5, uuid.UUID(ctx.guest_id))
+                        if _g2:
+                            _g2.message_count += 1
+                            await db.commit()
+                    except Exception:
+                        pass
+
             system_prompt = await _build_chat_context(db, parent, user_id=actual_patient_id)
 
             import logging as _llm_log_mod
@@ -1471,6 +1548,7 @@ async def chat_session(
             child.completed_at = datetime.now(timezone.utc)
             await db.commit()
 
+            await _inc_guest_count()
             yield f"event: complete\ndata: {json.dumps({'session_id': str(child.id), 'parent_session_id': str(parent.id)})}\n\n"
 
         except Exception as e:

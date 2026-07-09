@@ -64,8 +64,13 @@ class Settings(BaseSettings):
     @property
     def cors_origins(self) -> list[str]:
         origins = [o.strip() for o in self.cors_origins_raw.split(",") if o.strip()]
+        # In production, disallow literal "*" (too permissive) but allow
+        # fnmatch patterns like "https://*.vercel.app" through to the
+        # WildcardCORSMiddleware.
         if self.is_production and "*" in origins:
-            return [self.cors_fallback_origin]
+            origins = [o for o in origins if o != "*"]
+            if not origins:
+                origins = [self.cors_fallback_origin]
         return origins
 
     # Default admin credentials (auto-created if no admin exists)

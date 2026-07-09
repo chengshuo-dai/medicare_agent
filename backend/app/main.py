@@ -11,12 +11,12 @@ from contextlib import asynccontextmanager
 
 import sentry_sdk
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 from sqlalchemy import select
 
 from app.api.v1 import router as v1_router
 from app.core.config import get_settings
+from app.core.cors import WildcardCORSMiddleware
 from app.core.http_metrics import HTTPMetricsMiddleware
 from app.core.logging import configure_logging
 from app.core.rate_limiter import RateLimitMiddleware
@@ -122,9 +122,9 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS — configured via env, not hardcoded
+# CORS with fnmatch wildcard support (e.g. https://*.vercel.app)
 app.add_middleware(
-    CORSMiddleware,
+    WildcardCORSMiddleware,
     allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],

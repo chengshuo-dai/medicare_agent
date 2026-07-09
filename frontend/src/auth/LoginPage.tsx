@@ -17,6 +17,7 @@ import { Visibility, VisibilityOff, Email, Lock } from '@mui/icons-material';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { login, getMe } from '../api/auth';
+import { API_BASE } from '../api/client';
 
 const sagePrimary = '#7D9B76';
 const sagePrimaryDark = '#5C7A55';
@@ -331,7 +332,7 @@ const LoginPage: React.FC = () => {
                 const emailEl = (document.getElementById('email-input') as HTMLInputElement)?.value;
                 if (!emailEl) { setSnackbar({ open: true, message: 'Please enter your email address first', severity: 'error' }); return; }
                 try {
-                  const res = await fetch(`${import.meta.env.VITE_API_BASE || '/api/v1'}/auth/resend-verification`, {
+                  const res = await fetch(`${API_BASE}/auth/resend-verification`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: emailEl }),
                   });

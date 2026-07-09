@@ -5,10 +5,10 @@
  * DEL  /api/v1/documents/{id} — Delete
  */
 
-import { getToken } from './client';
+import { API_BASE, getToken } from './client';
 import type { DocumentParseResult, DocumentUploadResponse } from '../types/agent';
 
-const API_BASE = '/api/v1/documents';
+const DOCS_BASE = `${API_BASE}/documents`;
 
 function getGuestToken(): string | null {
   return localStorage.getItem('guest_token');
@@ -26,7 +26,7 @@ export async function uploadDocument(file: File): Promise<DocumentUploadResponse
   const formData = new FormData();
   formData.append('file', file);
 
-  const res = await fetch(`${API_BASE}/upload`, {
+  const res = await fetch(`${DOCS_BASE}/upload`, {
     method: 'POST',
     headers: authHeaders(),
     body: formData,
@@ -41,7 +41,7 @@ export async function uploadDocument(file: File): Promise<DocumentUploadResponse
 }
 
 export async function getParseResult(fileId: string): Promise<DocumentParseResult> {
-  const res = await fetch(`${API_BASE}/${encodeURIComponent(fileId)}/result`, {
+  const res = await fetch(`${DOCS_BASE}/${encodeURIComponent(fileId)}/result`, {
     headers: authHeaders(),
   });
 
@@ -56,7 +56,7 @@ export async function getParseResult(fileId: string): Promise<DocumentParseResul
 }
 
 export async function deleteDocument(fileId: string): Promise<void> {
-  const res = await fetch(`${API_BASE}/${encodeURIComponent(fileId)}`, {
+  const res = await fetch(`${DOCS_BASE}/${encodeURIComponent(fileId)}`, {
     method: 'DELETE',
     headers: authHeaders(),
   });

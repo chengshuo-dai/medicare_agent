@@ -272,6 +272,7 @@ export default function ChatPage() {
         } catch {
           setMessages((prev) => [...prev, { id: generateId(), role: 'agent', content: `Connection failed, please check network and retry`, timestamp: new Date() }]);
           setIsStreaming(false);
+          setChatMode('idle');
         }
         return;
       }
@@ -442,6 +443,9 @@ export default function ChatPage() {
                 if (status === 'quota_exceeded') {
                   // Guest free quota used up — don't add more steps
                   setIsStreaming(false);
+                  setChatMode('idle');
+                  // Re-fetch guest status to update can_interact
+                  agentApi.fetchGuestStatus().then(s => setGuestStatus(s)).catch(() => {});
                   break;
                 }
                 if (status === 'waiting_for_answer') {
@@ -453,6 +457,9 @@ export default function ChatPage() {
                     }
                   }
                   break;
+                }
+                if (status === 'already_diagnosed') {
+                  setChatMode('diagnosed');
                 }
                 addStep({
                   type: 'complete',
@@ -468,6 +475,12 @@ export default function ChatPage() {
                 });
                 setIsStreaming(false);
                 pendingSessionRef.current = null;
+                // Reset to idle so ChatInput reappears (non-diagnosis intents)
+                if (status !== 'already_diagnosed') {
+                  setChatMode('idle');
+                }
+                // Re-fetch guest status to refresh can_interact
+                agentApi.fetchGuestStatus().then(s => setGuestStatus(s)).catch(() => {});
                 break;
               }
             }
@@ -476,6 +489,7 @@ export default function ChatPage() {
       } catch {
         setMessages((prev) => [...prev, { id: generateId(), role: 'agent', content: `❌ Connection failed, please check network and retry`, timestamp: new Date() }]);
         setIsStreaming(false);
+        setChatMode('idle');
       }
     },
     [isStreaming, currentSessionId, chatMode]
@@ -697,6 +711,8 @@ export default function ChatPage() {
                 });
                 setIsStreaming(false);
                 pendingSessionRef.current = null;
+                // Re-fetch guest status to refresh can_interact
+                agentApi.fetchGuestStatus().then(s => setGuestStatus(s)).catch(() => {});
                 break;
               }
             }
@@ -705,6 +721,7 @@ export default function ChatPage() {
       } catch {
         setMessages((prev) => [...prev, { id: generateId(), role: 'agent', content: `❌ Connection failed, please check network and retry`, timestamp: new Date() }]);
         setIsStreaming(false);
+        setChatMode('idle');
       }
     },
     [isStreaming, currentSessionId]
